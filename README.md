@@ -1,0 +1,2 @@
+# DrugSeller
+This plugin allows users to sell drugs to Drug Buyers! Users can right click the entity (configurable in the config) and sell their products! Prices and items are configurable in the config and you can include custom names for items! Messages are also configurable! The drug buyers won't move and can't take damage. When you change the drug buyer's name in the config and reload the plugin, the drug dealers' names will change in-game!
