@@ -1,0 +1,49 @@
+name: DrugSeller
+main: io.github.mac_genius.drugseller.DrugSeller
+version: 1.0
+depend: [Vault]
+permissions:
+    drugseller.*:
+        description: Gives access to all commands for the plugin
+        children:
+            drugseller.reload: true
+            drugseller.help: true
+            drugseller.use: true
+    drugseller.reload:
+        description: Allows a player to reload the config
+        default: op
+    drugseller.help:
+        description: Brings up the commands
+        default: op
+    drugseller.create:
+        description: Allows a player to create a drug buyer
+        default: op
+    drugseller.remove:
+        description: Allows a player to delete a drug buyer
+        default: op
+commands:
+    dealer:
+        description: This is the help command.
+        usage: /dealer
+        permission: drugseller.help
+        permission-message: You do not have permission to do that.
+    dealer reload:
+            description: This will reload the plugin.
+            usage: /dealer reload
+            permission: drugseller.reload
+            permission-message: You do not have permission to do that.
+    dealer help:
+            description: This will show the commands.
+            usage: /dealer help
+            permission: drugseller.help
+            permission-message: You do not have permission to do that.
+    dealer create:
+            description: This will create a new drugseller.
+            usage: /dealer create
+            permission: drugseller.create
+            permission-message: You do not have permission to do that.
+    dealer remove:
+            description: This will remove a drugseller.
+            usage: /dealer remove
+            permission: drugseller.remove
+            permission-message: You do not have permission to do that.

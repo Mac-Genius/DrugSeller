@@ -1,0 +1,20 @@
+# This is where you can adjust all the amazing settings for this plugin!
+# You can use custom colors by using an '&' except on custom product names
+
+# Adjust messages to your liking
+messages:
+    # When you sell products
+    moneyReceived: 'You have earned $%money% from selling your product!'
+
+# Name of the drug buyer
+dealer name: 'Product Distributer'
+
+# Name of inventory when you right click the drug buyer
+inventory name: 'Place your product in!'
+
+# Custom products: "Name in caps | price | custom name for product"
+products:
+    - 'SUGAR 1.00 Cocaine'
+    - 'LONG_GRASS 1.00 Weed'
+    - 'RABBIT_STEW 10.00 Heroine'
+    - 'BROWN_MUSHROOM 5.00 Shrooms'
