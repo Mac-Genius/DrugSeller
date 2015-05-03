@@ -1,7 +1,6 @@
 package io.github.mac_genius.drugseller;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.IronGolem;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
@@ -12,23 +11,26 @@ import java.util.ArrayList;
  */
 public class NoMoving implements Runnable {
     private Plugin plugin;
-    private ArrayList<IronGolem> ironGolems;
+    private ArrayList<Entity> entities;
 
-    public NoMoving(Plugin pluginIn, ArrayList<IronGolem> ironGolemsIn) {
+    public NoMoving(Plugin pluginIn, ArrayList<Entity> entitiesIn) {
         plugin = pluginIn;
-        ironGolems = ironGolemsIn;
+        entities = entitiesIn;
     }
 
 
     @Override
     public synchronized void run() {
-        String name = plugin.getConfig().getString("dealer name");
-        name = ChatColor.translateAlternateColorCodes('&', name);
-        for (IronGolem ironGolem : ironGolems) {
-            if (!ironGolem.isPlayerCreated() && ironGolem.getName().equals(name) && ironGolem.isCustomNameVisible()) {
-                Vector vector = new Vector(0.0, 0.0, 0.0);
-                ironGolem.setVelocity(vector);
+        for (Entity entity : entities) {
+            if (entity.getVelocity().getX() != 0 && entity.getVelocity().getZ() != 0) {
+                Double directionX = entity.getVelocity().getX() * -1;
+                Double directionY = 0.0;
+                Double directionZ = entity.getVelocity().getZ() * -1;
+                Vector opposite = new Vector(directionX, directionY, directionZ);
+                opposite.add(entity.getVelocity());
+                entity.setVelocity(opposite);
             }
+
         }
     }
 }

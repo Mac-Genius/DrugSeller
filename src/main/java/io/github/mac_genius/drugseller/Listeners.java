@@ -9,6 +9,7 @@ import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -27,22 +28,22 @@ import java.text.DecimalFormat;
 public class Listeners implements Listener {
     private Economy economy;
     private Plugin plugin;
+    private ArrayList<Entity> entities;
 
-    public Listeners(Economy economyIn, Plugin pluginIn) {
+    public Listeners(Economy economyIn, Plugin pluginIn, ArrayList<Entity> entitiesIn) {
         plugin = pluginIn;
         economy = economyIn;
+        entities = entitiesIn;
     }
 
     @EventHandler
     public void onRightClick(PlayerInteractAtEntityEvent event) {
-        String name = plugin.getConfig().getString("dealer name");
-        name = ChatColor.translateAlternateColorCodes('&', name);
         String inventoryName = plugin.getConfig().getString("inventory name");
         inventoryName = ChatColor.translateAlternateColorCodes('&', inventoryName);
-        Entity ironGolem = event.getRightClicked();
-        if (ironGolem instanceof IronGolem) {
-            if (!((IronGolem) ironGolem).isPlayerCreated() && ironGolem.getName().equals(name) && ironGolem.isCustomNameVisible()) {
-                event.getPlayer().openInventory(new InventoryCreator().setup(event.getPlayer(), inventoryName));
+        Entity entity = event.getRightClicked();
+        for (Entity e : entities) {
+            if (entity == e) {
+                plugin.getServer().getScheduler().runTaskLater(plugin, new InventoryCreator(event.getPlayer(), inventoryName), 1);
             }
         }
     }
@@ -90,12 +91,10 @@ public class Listeners implements Listener {
     }
 
     @EventHandler
-    public void noDamage(EntityDamageEvent event) {
-        String name = plugin.getConfig().getString("dealer name");
-        name = ChatColor.translateAlternateColorCodes('&', name);
+    public void noDamage(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
-        if (entity instanceof IronGolem) {
-            if (!((IronGolem) entity).isPlayerCreated() && entity.getName().equals(name) && entity.isCustomNameVisible()) {
+        for (Entity e : entities) {
+            if (e == entity) {
                 event.setCancelled(true);
             }
         }

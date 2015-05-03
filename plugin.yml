@@ -1,6 +1,6 @@
 name: DrugSeller
 main: io.github.mac_genius.drugseller.DrugSeller
-version: 1.0
+version: 1.1
 depend: [Vault]
 permissions:
     drugseller.*:
@@ -8,7 +8,12 @@ permissions:
         children:
             drugseller.reload: true
             drugseller.help: true
-            drugseller.use: true
+            drugseller.remove: true
+            drugseller.create: true
+            drugseller.set: true
+            drugseller.gui: true
+            drugseller.entitylist: true
+
     drugseller.reload:
         description: Allows a player to reload the config
         default: op
@@ -20,6 +25,15 @@ permissions:
         default: op
     drugseller.remove:
         description: Allows a player to delete a drug buyer
+        default: op
+    drugseller.set:
+        description: Allows a player to teleport an entity to you
+        default: op
+    drugseller.gui:
+        description: Allows a player to open the trading gui
+        default: op
+    drugseller.entitylist:
+        description: Shows the types of entities you can choose from
         default: op
 commands:
     dealer:
@@ -39,11 +53,26 @@ commands:
             permission-message: You do not have permission to do that.
     dealer create:
             description: This will create a new drugseller.
-            usage: /dealer create
+            usage: /dealer create <EntityType> (name)
             permission: drugseller.create
             permission-message: You do not have permission to do that.
     dealer remove:
             description: This will remove a drugseller.
-            usage: /dealer remove
+            usage: /dealer remove (name)
             permission: drugseller.remove
+            permission-message: You do not have permission to do that.
+    dealer set:
+            description: This will remove a drugseller.
+            usage: /dealer set (name)
+            permission: drugseller.set
+            permission-message: You do not have permission to do that.
+    dealer gui:
+            description: This will open the gui for selling items.
+            usage: /dealer gui
+            permission: drugseller.gui
+            permission-message: You do not have permission to do that.
+    dealer entitylist:
+            description: This will show the possible entities you can choose.
+            usage: /dealer entitylist
+            permission: drugseller.entitylist
             permission-message: You do not have permission to do that.

@@ -1,15 +1,13 @@
 package io.github.mac_genius.drugseller;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.ArrayList;
 
@@ -21,21 +19,20 @@ public class RemoveEntity implements Listener {
     private ArrayList<RegisteredListener> listeners;
     private ArrayList<HandlerList> handlerLists;
     private Player hitter;
-    private ArrayList<IronGolem> ironGolems;
+    private ArrayList<Entity> entities;
 
-    public RemoveEntity(Plugin pluginIn, Player hitterIn, ArrayList<IronGolem> ironGolemsIn) {
+    public RemoveEntity(Plugin pluginIn, Player hitterIn, ArrayList<Entity> entitiesIn) {
         plugin = pluginIn;
         listeners = HandlerList.getRegisteredListeners(plugin);
         handlerLists = HandlerList.getHandlerLists();
         hitter = hitterIn;
         plugin.getServer().getScheduler().runTaskLater(plugin, new CancelAfterTime(plugin, this, hitter), 200);
-        ironGolems = ironGolemsIn;
+        entities = entitiesIn;
     }
 
     @EventHandler
     public void removeEntity(EntityDamageByEntityEvent event) {
-        String name = plugin.getConfig().getString("dealer name");
-        name = ChatColor.translateAlternateColorCodes('&', name);
+        ArrayList<String> uuid = new ArrayList<>(plugin.getConfig().getStringList("dealers"));
         if (event.getDamager().getName().equals(hitter.getName())) {
             for (HandlerList l : handlerLists) {
                 for (RegisteredListener r : l.getRegisteredListeners()) {
@@ -45,15 +42,18 @@ public class RemoveEntity implements Listener {
                 }
             }
             Entity entity = event.getEntity();
-            if (entity instanceof IronGolem) {
-                if (!((IronGolem) entity).isPlayerCreated() && entity.getName().equals(name) && entity.isCustomNameVisible()) {
-                    ((IronGolem) entity).setHealth(0);
-                    event.setCancelled(true);
-                    synchronized (ironGolems) {
-                        for (IronGolem i : ironGolems) {
-                            if ((IronGolem) entity == i) {
-                                ironGolems.remove(entity);
+            entity.remove();
+            event.setCancelled(true);
+            synchronized (entities) {
+                for (Entity i : entities) {
+                    if (entity == i) {
+                        for (String uuids : uuid) {
+                            if (entity.getUniqueId().toString().equals(uuids)) {
+                                entities.remove(entity);
                                 hitter.sendMessage("Entity Removed");
+                                uuid.remove(uuids);
+                                plugin.getConfig().set("dealers", uuid);
+                                plugin.saveConfig();
                                 return;
                             }
                         }
