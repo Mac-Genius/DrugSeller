@@ -68,7 +68,7 @@ public class Commands implements CommandExecutor {
                             return true;
                         }
                         entityName = ChatColor.translateAlternateColorCodes('&', entityName);
-                        Entity entity = ((Player) commandSender).getWorld().spawnEntity(((Player) commandSender).getLocation(), EntityType.valueOf(entityType));
+                        Entity entity = ((Player) commandSender).getWorld().spawnEntity(((Player) commandSender).getLocation(), EntityType.valueOf(entityType.toUpperCase()));
                         entity.setCustomName(entityName);
                         entity.setCustomNameVisible(true);
                         if (entity instanceof LivingEntity) {

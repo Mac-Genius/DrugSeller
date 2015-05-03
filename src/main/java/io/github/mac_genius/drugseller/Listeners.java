@@ -1,26 +1,25 @@
 package io.github.mac_genius.drugseller;
 
+import com.Acrobot.ChestShop.Events.ItemInfoEvent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.text.DecimalFormat;
 
 /**
  * Created by Mac on 4/29/2015.
@@ -130,6 +129,29 @@ public class Listeners implements Listener {
                 }
             }
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void iteminfoCommand(ItemInfoEvent event) {
+        ArrayList<String> items = new ArrayList<>(plugin.getConfig().getStringList("products"));
+        for (String s : items) {
+            Scanner scan = new Scanner(s);
+            Material itemType = Material.getMaterial(scan.next());
+            double price = Double.parseDouble(scan.next());
+            String name = null;
+            if (scan.hasNext()) {
+                name = scan.next();
+            }
+            try {
+                if (event.getItem().getType() == itemType && event.getItem().getItemMeta().getDisplayName().equals(name)) {
+                    event.getSender().sendMessage(" ");
+                    event.getSender().sendMessage(ChatColor.GREEN + "[Dealer] Item Information:");
+                    event.getSender().sendMessage(ChatColor.AQUA + event.getItem().getItemMeta().getDisplayName() + ChatColor.WHITE + "      $" + price);
+                }
+            } catch (NullPointerException e) {
+                return;
+            }
         }
     }
 }
